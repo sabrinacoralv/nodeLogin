@@ -47,4 +47,13 @@ app.post('/auth', (req, res) => {
         res.end();
     }
 });
+app.get('/home', (req, res) => {
+
+    if (req.session.loggedin) {
+        res.send('welcome back, ' + req.session.username + ' ! ');
+    } else {
+        res.send('Please login to view this page!')
+    }
+    res.end()
+})
 app.listen(3000);
