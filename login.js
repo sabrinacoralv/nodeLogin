@@ -25,4 +25,26 @@ app.get('/', (req,res) => {
     //render login template
     res.sendFile(path.join(__dirname + '/login.html'))
 })
+app.post('/auth', (req, res) => {
+    let username = req.body.username
+    let password = req.body.password 
+
+    if (username && password) {
+        connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], (error, results, fields) => {
+            if (error) throw error;
+            if (results.length > 0) {
+                req.session.loggedin = true;
+                req.session.username = username;
+
+                res.redirect('/home');
+            } else {
+                res.send('Incorrect Username and/or Password');
+            }
+            res.end();
+        })
+    } else {
+        res.send('please enter Username and password');
+        res.end();
+    }
+});
 app.listen(3000);
